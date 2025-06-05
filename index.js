@@ -58,7 +58,7 @@ const generateAccessToken = (user) => {
     return jwt.sign(
         { id: user.id, isAdmin: user.isAdmin }, 
         "mySecretKey",
-        { expiresIn: "20s" }
+        { expiresIn: "30s" }
     );
 }
 
@@ -91,7 +91,7 @@ app.post("/api/login", (req, res) => {
             refreshToken
         });
     } else {
-        res.status(400).json("Username or password incorrect")
+        res.status(400).json("Username or password incorrect!");
     }
 });
 
@@ -119,7 +119,13 @@ app.delete("/api/users/:userId", verify, (req, res) => {
     } else {
         res.status(403).json("You are not allowed to delete this user!")
     }
-})
+});
+
+app.post("/api/logout", verify, (req, res) => {
+    const refreshToken = req.body.token;
+    refreshTokens = refreshTokens.filter(token => token !== refreshToken);
+    res.status(200).json("You logged out successfully.")
+});
 
 app.listen(5000, () => {
     console.log("Backend Server is running!~");
